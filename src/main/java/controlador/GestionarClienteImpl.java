@@ -19,12 +19,22 @@ public class GestionarClienteImpl implements clienteControlador {
             ps.setString(3, cl.getCorreo());
             ps.setString(4, cl.getTelefono());
 
-
             ps.executeUpdate();
             System.out.println("REGISTRO EXITOSO!");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    @Override
+    public void actualizar(cliente cl, int id) {
+
+    }
+
+    @Override
+    public List<cliente> listar() {
+        System.out.println("lista");
+        return null;
     }
 
     @Override
@@ -40,9 +50,8 @@ public class GestionarClienteImpl implements clienteControlador {
     }
 
     @Override
-    public List<cliente> listar() {
-        System.out.println("lista");
-        return null;
+    public void eliminar(int id) {
+        System.out.println("");
     }
 
 }

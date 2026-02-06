@@ -19,7 +19,6 @@ public class venta {
         this.items = items;
     }
 
-    
     public int getId() {
         return id;
     }

@@ -17,24 +17,20 @@ public class menuCliente {
             op = validaciones.validacionEnteroSwitch("""
                     ======= GESTIÓN CLIENTES =======
                     1. Registrar cliente
-                    2. Listar clientes
-                    3. Buscar cliente por ID
-                    4. Volver
-                    """, 1, 4);
+                    2. Actualizar clientes
+                    3. Borrar clientes
+                    4. Buscar cliente por ID
+                    5. Listar clientes
+                    6. Salir
+                    """, 1, 6);
 
             switch (op) {
-                case 1:
-                    registrar();
-                    break;
-                case 2:
-                    listar();
-                    break;
-                case 3:
-                    buscarPorId();
-                    break;
-                case 4:
-                    System.out.println("Volviendo al menú principal...");
-                    break;
+                case 1 -> registrar();
+                case 2 -> actualizar();
+                case 3 -> eliminar();
+                case 4 -> buscarPorId();
+                case 5 -> listar();
+                case 6 -> System.out.println("Saliendo al menu principaaaal");
             }
 
         } while (op != 4);
@@ -57,12 +53,20 @@ public class menuCliente {
 
         gestor.registrar(c);
     }
+    
+    private void actualizar() {
+        System.out.println("Falta implementar");
+    }
 
     private void listar() {
         System.out.println("falta implementar");
     }
 
     private void buscarPorId() {
+        System.out.println("falta implementar");
+    }
+    
+    private void eliminar() {
         System.out.println("falta implementar");
     }
 }
