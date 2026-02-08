@@ -129,7 +129,19 @@ public class menuCliente {
     }
 
     private void buscarPorId() {
-        System.out.println("falta implementar");
+        System.out.println("Ingrese el id de el cliente a buscar");
+        int id = new Scanner(System.in).nextInt();
+        cliente cl = gestor.buscarPorId(id);
+        if (cl != null) {
+            System.out.println("ID: " + cl.getId());
+            System.out.println("Nombre: " + cl.getNombre());
+            System.out.println("Identificación: " + cl.getIdentificacion());
+            System.out.println("Correo: " + cl.getCorreo());
+            System.out.println("Teléfono: " + cl.getTelefono());
+            System.out.println("----------------------------------");
+        } else {
+            System.out.println("No existe ese id");
+        }
     }
 
     private void eliminar() {
