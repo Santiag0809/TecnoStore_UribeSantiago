@@ -3,6 +3,7 @@ package vista;
 import controlador.GestionarClienteImpl;
 import controlador.clienteControlador;
 import controlador.validaciones;
+import java.util.ArrayList;
 import java.util.Scanner;
 import modelo.cliente;
 
@@ -40,7 +41,7 @@ public class menuCliente {
                     System.out.println("Saliendo al menu principaaaal");
             }
 
-        } while (op != 4);
+        } while (op != 6);
     }
 
     private void registrar() {
@@ -101,17 +102,30 @@ public class menuCliente {
                     cl.setTelefono(new Scanner(System.in).nextLine());
                     break;
                 }
-                
+
             }
-            gestor.actualizar(cl , id);
-        }
-        else {
+            gestor.actualizar(cl, id);
+        } else {
             System.out.println("No existe dicho empleado");
         }
     }
 
     private void listar() {
-        System.out.println("falta implementar");
+        ArrayList<cliente> clientes = gestor.listar();
+
+        if (clientes.isEmpty()) {
+            System.out.println("No hay clientes registrados.");
+            return;
+        }
+
+        for (cliente cl : clientes) {
+            System.out.println("ID: " + cl.getId());
+            System.out.println("Nombre: " + cl.getNombre());
+            System.out.println("Identificación: " + cl.getIdentificacion());
+            System.out.println("Correo: " + cl.getCorreo());
+            System.out.println("Teléfono: " + cl.getTelefono());
+            System.out.println("----------------------------------");
+        }
     }
 
     private void buscarPorId() {

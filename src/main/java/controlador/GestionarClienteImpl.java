@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 import modelo.cliente;
 
 public class GestionarClienteImpl implements clienteControlador {
@@ -59,22 +58,26 @@ public class GestionarClienteImpl implements clienteControlador {
     @Override
     public ArrayList<cliente> listar() {
         ArrayList<cliente> clientes = new ArrayList<>();
-        String sql = "SELECT id, nombre, identificacion, correo, telefono FROM cliente";
 
-        try (Connection con = c.conectar(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection con = c.conectar()) {
+
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("select * from cliente");
 
             while (rs.next()) {
-                clientes.add(new cliente(
+                cliente cl = new cliente(
                         rs.getInt("id"),
                         rs.getString("nombre"),
                         rs.getString("identificacion"),
                         rs.getString("correo"),
                         rs.getString("telefono")
-                ));
+                );
+
+                clientes.add(cl);
             }
 
-        } catch (SQLException e) {
-            System.out.println("Error listando clientes: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
 
         return clientes;
@@ -137,12 +140,12 @@ public class GestionarClienteImpl implements clienteControlador {
             ps.setString(1, identificacion);
 
             try (ResultSet rs = ps.executeQuery()) {
-                return rs.next(); 
+                return rs.next();
             }
 
         } catch (SQLException e) {
             System.out.println("Error validando identificación: " + e.getMessage());
-            return true; 
+            return true;
         }
     }
 

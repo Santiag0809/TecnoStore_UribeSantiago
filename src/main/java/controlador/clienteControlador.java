@@ -1,6 +1,6 @@
 package controlador;
 
-import java.util.List;
+import java.util.ArrayList;
 import modelo.cliente;
 
 public interface clienteControlador  {
@@ -9,7 +9,7 @@ public interface clienteControlador  {
     
     void actualizar(cliente c, int id);
  
-    List<cliente> listar();
+    ArrayList<cliente> listar();
     
     void eliminar(int id);
 
