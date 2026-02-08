@@ -67,8 +67,13 @@ public class menuCliente {
         int id = new Scanner(System.in).nextInt();
         cliente cl = gestor.buscarPorId(id);
         if (cl != null) {
-            System.out.println("CLIENTE BUSCADO");
-            System.out.println(cl);
+            System.out.println("CLIENTE ENCONTRADO");
+            System.out.println("ID: " + cl.getId());
+            System.out.println("Nombre: " + cl.getNombre());
+            System.out.println("Identificación: " + cl.getIdentificacion());
+            System.out.println("Correo: " + cl.getCorreo());
+            System.out.println("Teléfono: " + cl.getTelefono());
+            System.out.println("----------------------------------");
             System.out.println("""
                                Ingrese lo quiere modificar
                                1.   Nombre
@@ -106,7 +111,7 @@ public class menuCliente {
             }
             gestor.actualizar(cl, id);
         } else {
-            System.out.println("No existe dicho empleado");
+            System.out.println("No existe dicho cliente");
         }
     }
 
