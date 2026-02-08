@@ -14,6 +14,7 @@ public class menu {
                            2.   Gestionar Celulalres.
                            3.   Gestionar Ventas.
                            4.   Salir.
+                           ******************************
                            """);
             op = new Scanner(System.in).nextInt();
             while (op < 1 || op > 4) {

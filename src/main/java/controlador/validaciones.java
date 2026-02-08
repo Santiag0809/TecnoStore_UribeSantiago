@@ -37,7 +37,23 @@ public class validaciones {
     }
 
     public static String validarTexto(String mensaje) {
-        System.out.println(mensaje);
-        return sc.nextLine();
+        while (true) {
+            System.out.println(mensaje);
+            String txt = sc.nextLine().trim();
+            if (txt.isEmpty()) {
+                System.out.println("Error, el campo no puede estar vacío.");
+            } else {
+                return txt;
+            }
+        }
     }
+
+    public static boolean correoValidador(String correo) {
+        if (correo == null) {
+            return false;
+        }
+        correo = correo.trim();
+        return correo.matches("^[\\w.-]+@[\\w.-]+\\.[A-Za-z]{2,}$");
+    }
+
 }
