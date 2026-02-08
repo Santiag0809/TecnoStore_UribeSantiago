@@ -129,7 +129,7 @@ public class menuCliente {
     }
 
     private void buscarPorId() {
-        System.out.println("Ingrese el id de el cliente a buscar");
+        System.out.println("Ingrese el id del cliente a buscar");
         int id = new Scanner(System.in).nextInt();
         cliente cl = gestor.buscarPorId(id);
         if (cl != null) {
@@ -145,6 +145,8 @@ public class menuCliente {
     }
 
     private void eliminar() {
-        System.out.println("falta implementar");
+        System.out.println("Ingrese el id del cliente a eliminar");
+        int id = new Scanner(System.in).nextInt();
+        gestor.eliminar(id);
     }
 }
