@@ -56,22 +56,7 @@ public class menuCliente {
             return;
         }
 
-        Scanner sc = new Scanner(System.in);
-        String correo;
-
-        do {
-            System.out.print("Ingrese el correo: ");
-            correo = sc.nextLine();
-
-            if (!validaciones.correoValidador(correo)) {
-                System.out.println("Correo inválido, intente nuevamente.");
-            }
-        } while (!validaciones.correoValidador(correo));
-
-        c.setCorreo(correo);
-        System.out.println("Correo guardado correctamente");
-
-        
+        c.setCorreo(validaciones.validarTexto("Ingrese el correo:"));
         c.setTelefono(validaciones.validarTexto("Ingrese el teléfono:"));
 
         gestor.registrar(c);
