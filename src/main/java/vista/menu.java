@@ -7,6 +7,7 @@ public class menu {
     public void Menu_Principal() {
         int op = 0;
         menuCliente menuCliente = new menuCliente();
+        menuCelular menuCelular = new menuCelular();
         do {
             System.out.println("""
                            ******************************
@@ -26,7 +27,7 @@ public class menu {
                      menuCliente.menuCliente();
                     break;
                 case 2:
-                    System.out.println("Celular");
+                    menuCelular.menuCelular();
                     break;
                 case 3:
                     System.out.println("Ventas");

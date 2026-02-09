@@ -1,14 +1,18 @@
-
 package controlador;
 
-import java.sql.Connection;
+import java.util.ArrayList;
+import modelo.celular;
 
-public class celularControlador {
-    
-    private Connection conexion;
+public interface celularControlador {
 
-    public celularControlador(Connection conexion) {
-        this.conexion = conexion;
-    }
-    
+    void registrar(celular ce);
+
+    void actualizar(celular ce, int id);
+
+    void eliminar(int id);
+
+    ArrayList<celular> listar();
+
+    celular buscar(int id);
+
 }
