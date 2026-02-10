@@ -17,6 +17,10 @@ public class celular {
         this.sistema_operativo = sistema_operativo;
         this.gama = gama;
     }
+
+    public celular() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     
     public int getId() {
         return id;
