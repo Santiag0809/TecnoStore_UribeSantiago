@@ -46,6 +46,8 @@ public class menuCelular {
         } while (op != 6);
     }
 
+    
+    // HAY UN ERROR EN LA MARCA//
     private void registrarCelular() {
 
         ArrayList<marca> marcas = gestorMarca.listar();
