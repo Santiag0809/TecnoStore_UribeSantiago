@@ -2,10 +2,10 @@ package modelo;
 
 public class celular {
 
-    private int id,stock;
+    private int id, stock;
     private marca id_marca;
     private double precio;
-    private String modelo,sistema_operativo;
+    private String modelo, sistema_operativo;
     private gama gama;
 
     public celular(int id, int stock, marca id_marca, double precio, String modelo, String sistema_operativo, gama gama) {
@@ -21,7 +21,7 @@ public class celular {
     public celular() {
 
     }
-    
+
     public int getId() {
         return id;
     }
@@ -78,7 +78,16 @@ public class celular {
         this.gama = gama;
     }
 
-    
-    
-    
+    @Override
+    public String toString() {
+        return "ID: " + id
+                + "\nMarca: " + (id_marca != null ? id_marca.getMarca() : "N/A")
+                + "\nModelo: " + modelo
+                + "\nSistema Operativo: " + sistema_operativo
+                + "\nGama: " + gama
+                + "\nPrecio: $" + String.format("%,.2f", precio)
+                + "\nStock: " + stock
+                + "\n----------------------------------";
+    }
+
 }

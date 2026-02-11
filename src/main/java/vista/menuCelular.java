@@ -46,7 +46,7 @@ public class menuCelular {
         } while (op != 6);
     }
 
-    // HAY UN ERROR EN LA MARCA//
+    
     private void registrarCelular() {
 
         ArrayList<marca> marcas = gestorMarca.listar();
@@ -198,16 +198,7 @@ public class menuCelular {
             return;
         }
 
-        for (celular c : celulares) {
-            System.out.println("ID: " + c.getId());
-            System.out.println("Marca: " + c.getId_marca().getMarca());
-            System.out.println("Modelo: " + c.getModelo());
-            System.out.println("Sistema Operativo: " + c.getSistema_operativo());
-            System.out.println("Gama: " + c.getGama());
-            System.out.println("Precio: $" + String.format("%.2f", c.getPrecio()));
-            System.out.println("Stock: " + c.getStock());
-            System.out.println("----------------------------------");
-        }
+        
 
     }
 
