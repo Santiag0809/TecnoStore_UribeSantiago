@@ -1,6 +1,7 @@
 package modelo;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class venta {
@@ -16,7 +17,7 @@ public class venta {
         this.cliente = cliente;
         this.fecha = fecha;
         this.total = total;
-        this.items = items;
+        this.items = (items != null) ? items : new ArrayList<>();
     }
 
     public int getId() {
@@ -56,9 +57,11 @@ public class venta {
     }
 
     public void setItems(List<detalleVenta> items) {
-        this.items = items;
+        this.items = (items != null) ? items : new ArrayList<>();
     }
-    
-    
-    
+
+    public venta() {
+        this.items = new ArrayList<>();
+    }
+
 }

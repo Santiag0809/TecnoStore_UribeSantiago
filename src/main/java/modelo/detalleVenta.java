@@ -7,13 +7,12 @@ public class detalleVenta {
     private int cantidad;
     private double subtotal;
 
-    public detalleVenta(int id, celular celular, int cantidad, double subtotal) {
-        this.id = id;
+    public detalleVenta(celular celular, int cantidad) {
         this.celular = celular;
         this.cantidad = cantidad;
-        this.subtotal = subtotal;
+        this.subtotal = celular.getPrecio() * cantidad;
     }
-    
+
     public int getId() {
         return id;
     }
@@ -28,6 +27,9 @@ public class detalleVenta {
 
     public void setCelular(celular celular) {
         this.celular = celular;
+        if (celular != null) {
+            this.subtotal = celular.getPrecio() * cantidad;
+        }
     }
 
     public int getCantidad() {
@@ -36,6 +38,9 @@ public class detalleVenta {
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
+        if (celular != null) {
+            this.subtotal = celular.getPrecio() * cantidad;
+        }
     }
 
     public double getSubtotal() {
@@ -45,7 +50,5 @@ public class detalleVenta {
     public void setSubtotal(double subtotal) {
         this.subtotal = subtotal;
     }
-    
-    
-    
+
 }
