@@ -20,7 +20,7 @@ public class menu {
                            ******************************
                            """);
             op = new Scanner(System.in).nextInt();
-            while (op < 1 || op > 4) {
+            while (op < 1 || op > 5) {
                 System.out.println("Error, opcion no valida");
                 op = new Scanner(System.in).nextInt();
             }

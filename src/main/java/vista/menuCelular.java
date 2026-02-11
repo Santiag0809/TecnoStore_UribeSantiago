@@ -46,7 +46,6 @@ public class menuCelular {
         } while (op != 6);
     }
 
-    
     // HAY UN ERROR EN LA MARCA//
     private void registrarCelular() {
 
@@ -106,7 +105,6 @@ public class menuCelular {
         System.out.println("Celular actual:");
         System.out.println(c);
 
-        
         ArrayList<marca> marcas = gestorMarca.listar();
         System.out.println("Seleccione nueva marca:");
         for (marca m : marcas) {
@@ -200,23 +198,17 @@ public class menuCelular {
             return;
         }
 
-        System.out.println("""
-        ID | MARCA | MODELO | SO | GAMA | PRECIO | STOCK
-        -------------------------------------------------
-        """);
-
         for (celular c : celulares) {
-            System.out.printf(
-                    "%-3d %-10s %-15s %-10s %-6s $%-8.2f %-5d%n",
-                    c.getId(),
-                    c.getId_marca().getMarca(),
-                    c.getModelo(),
-                    c.getSistema_operativo(),
-                    c.getGama(),
-                    c.getPrecio(),
-                    c.getStock()
-            );
+            System.out.println("ID: " + c.getId());
+            System.out.println("Marca: " + c.getId_marca().getMarca());
+            System.out.println("Modelo: " + c.getModelo());
+            System.out.println("Sistema Operativo: " + c.getSistema_operativo());
+            System.out.println("Gama: " + c.getGama());
+            System.out.println("Precio: $" + String.format("%.2f", c.getPrecio()));
+            System.out.println("Stock: " + c.getStock());
+            System.out.println("----------------------------------");
         }
+
     }
 
 }
