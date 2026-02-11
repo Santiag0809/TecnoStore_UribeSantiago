@@ -13,7 +13,7 @@ public class menu {
             System.out.println("""
                            ******************************
                            1.   Gestionar Cliente.
-                           2.   Gestionar Celulalres.
+                           2.   Gestionar Celulares.
                            3.   Gestionar Marcas.
                            4.   Gestionar Ventas.
                            5.   Salir.

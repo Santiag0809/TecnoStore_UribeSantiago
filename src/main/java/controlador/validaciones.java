@@ -29,12 +29,21 @@ public class validaciones {
         while (true) {
             try {
                 System.out.println(mensaje);
-                return Integer.parseInt(sc.nextLine());
+                int valor = Integer.parseInt(sc.nextLine());
+                
+        if (valor < 0) {
+                    System.out.println("Error: no se permiten números negativos.");
+                } else {
+                    return valor;
+                }
+
             } catch (NumberFormatException e) {
                 System.out.println("Error, solo se aceptan números enteros");
             }
         }
-    }
+    
+}
+
 
     public static String validarTexto(String mensaje) {
         while (true) {

@@ -56,10 +56,20 @@ public class menuCliente {
             return;
         }
 
-        c.setCorreo(validaciones.validarTexto("Ingrese el correo:"));
+        String correo;
+        do {
+            correo = validaciones.validarTexto("Ingrese el correo:");
+            if (!validaciones.correoValidador(correo)) {
+                System.out.println("Error: formato de correo inválido.");
+            }
+        } while (!validaciones.correoValidador(correo));
+
+        c.setCorreo(correo);
+
         c.setTelefono(validaciones.validarTexto("Ingrese el teléfono:"));
 
         gestor.registrar(c);
+
     }
 
     private void actualizar() {
@@ -88,8 +98,7 @@ public class menuCliente {
             }
             switch (op) {
                 case 1 -> {
-                    System.out.println("Ingrese el nuevo nombre del cliente");
-                    cl.setNombre(new Scanner(System.in).nextLine());
+                    cl.setNombre(validaciones.validarTexto("Ingrese el nuevo nombre:"));
                     break;
                 }
                 case 2 -> {
@@ -97,11 +106,20 @@ public class menuCliente {
                     cl.setIdentificacion(new Scanner(System.in).nextLine());
                     break;
                 }
+
                 case 3 -> {
-                    System.out.println("Ingrese el nuevo correo del cliente");
-                    cl.setCorreo(new Scanner(System.in).nextLine());
-                    break;
+                    String correo;
+                    do {
+                        correo = validaciones.validarTexto("Ingrese el nuevo correo del cliente:");
+                        if (!validaciones.correoValidador(correo)) {
+                            System.out.println("Error: formato de correo inválido.");
+                        }
+                    } while (!validaciones.correoValidador(correo));
+
+                    cl.setCorreo(correo);
+
                 }
+
                 case 4 -> {
                     System.out.println("Ingrese el nuevo telefono del cliente");
                     cl.setTelefono(new Scanner(System.in).nextLine());
