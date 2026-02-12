@@ -1,12 +1,17 @@
 package controlador;
 
-import java.sql.Connection;
+import java.util.ArrayList;
+import modelo.venta;
 
-public class ventaControlador {
+public interface ventaControlador {
 
-private Connection conexion;
+    void registrar(venta v);
 
-    public ventaControlador(Connection conexion) {
-        this.conexion = conexion;
-    }    
+    void actualizar(venta v, int id);
+
+    ArrayList<venta> listar();
+
+    venta buscarPorId(int id);
+
+    void eliminar(int id);
 }

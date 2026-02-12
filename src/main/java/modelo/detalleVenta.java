@@ -3,14 +3,19 @@ package modelo;
 public class detalleVenta {
 
     private int id;
+    private int id_venta;
     private celular celular;
     private int cantidad;
     private double subtotal;
 
-    public detalleVenta(celular celular, int cantidad) {
+    public detalleVenta() {
+    }
+
+    public detalleVenta(int id_venta, celular celular, int cantidad, double subtotal) {
+        this.id_venta = id_venta;
         this.celular = celular;
         this.cantidad = cantidad;
-        this.subtotal = celular.getPrecio() * cantidad;
+        this.subtotal = subtotal;
     }
 
     public int getId() {
@@ -21,15 +26,20 @@ public class detalleVenta {
         this.id = id;
     }
 
+    public int getId_venta() {
+        return id_venta;
+    }
+
+    public void setId_venta(int id_venta) {
+        this.id_venta = id_venta;
+    }
+
     public celular getCelular() {
         return celular;
     }
 
     public void setCelular(celular celular) {
         this.celular = celular;
-        if (celular != null) {
-            this.subtotal = celular.getPrecio() * cantidad;
-        }
     }
 
     public int getCantidad() {
@@ -38,9 +48,6 @@ public class detalleVenta {
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
-        if (celular != null) {
-            this.subtotal = celular.getPrecio() * cantidad;
-        }
     }
 
     public double getSubtotal() {
@@ -50,5 +57,4 @@ public class detalleVenta {
     public void setSubtotal(double subtotal) {
         this.subtotal = subtotal;
     }
-
 }
