@@ -351,4 +351,82 @@ public class GestionarVentaImpl implements ventaControlador {
             System.out.println("Error eliminando venta: " + e.getMessage());
         }
     }
+
+    public ArrayList<venta> listarConDetalles() {
+
+        ArrayList<venta> ventas = new ArrayList<>();
+
+        String sql = """
+    SELECT v.id AS venta_id,
+           v.fecha,
+           v.total,
+           c.id AS cliente_id,
+           c.nombre AS cliente_nombre,
+           dv.id AS detalle_id,
+           dv.cantidad,
+           dv.subtotal,
+           ce.id AS celular_id,
+           ce.modelo,
+           ce.precio
+    FROM venta v
+    JOIN cliente c ON c.id = v.id_cliente
+    LEFT JOIN detalle_venta dv ON dv.id_venta = v.id
+    LEFT JOIN celular ce ON ce.id = dv.id_celular
+    ORDER BY v.id
+    """;
+
+        try (Connection con = c.conectar(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            java.util.LinkedHashMap<Integer, venta> map = new java.util.LinkedHashMap<>();
+
+            while (rs.next()) {
+
+                int idVenta = rs.getInt("venta_id");
+
+                venta v = map.get(idVenta);
+
+                if (v == null) {
+
+                    cliente cl = new cliente();
+                    cl.setId(rs.getInt("cliente_id"));
+                    cl.setNombre(rs.getString("cliente_nombre"));
+
+                    v = new venta(
+                            idVenta,
+                            cl,
+                            rs.getDate("fecha").toLocalDate(),
+                            rs.getDouble("total"),
+                            new ArrayList<>()
+                    );
+
+                    map.put(idVenta, v);
+                }
+
+                int detalleId = rs.getInt("detalle_id");
+                if (!rs.wasNull()) {
+
+                    celular ce = new celular();
+                    ce.setId(rs.getInt("celular_id"));
+                    ce.setModelo(rs.getString("modelo"));
+                    ce.setPrecio(rs.getDouble("precio"));
+
+                    detalleVenta dv = new detalleVenta();
+                    dv.setId(detalleId);
+                    dv.setCelular(ce);
+                    dv.setCantidad(rs.getInt("cantidad"));
+                    dv.setSubtotal(rs.getDouble("subtotal"));
+
+                    v.getItems().add(dv);
+                }
+            }
+
+            ventas.addAll(map.values());
+
+        } catch (SQLException e) {
+            System.out.println("Error listando ventas con detalles: " + e.getMessage());
+        }
+
+        return ventas;
+    }
+
 }

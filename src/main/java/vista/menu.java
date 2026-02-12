@@ -10,6 +10,7 @@ public class menu {
         menuCelular menuCelular = new menuCelular();
         menuMarca menuMarca = new menuMarca();
         menuVenta menuVenta = new menuVenta();
+        menuReportes menuReportes = new menuReportes();
         Scanner sc = new Scanner(System.in);
         do {
             System.out.println("""
@@ -41,7 +42,7 @@ public class menu {
                 case 2 -> menuCelular.menuCel();
                 case 3 -> menuMarca.menuMarcos();
                 case 4 -> menuVenta.menuVentana();
-                case 5 -> System.out.println("reportes.txt");
+                case 5 -> menuReportes.menuReportes();
                 case 6 -> System.out.println("Gracias por usar el sistema adioooos");
             }
 
