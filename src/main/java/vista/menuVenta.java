@@ -304,8 +304,30 @@ public class menuVenta {
 
     private void eliminar() {
 
-        System.out.println("Ingrese el id de la venta a eliminar");
-        int id = new Scanner(System.in).nextInt();
-        gestor.eliminar(id);
+        listar();
+
+        int id = validaciones.validacionEnteros("Ingrese el id de la venta a eliminar");
+        venta v = gestor.buscarPorId(id);
+
+        if (v == null) {
+            System.out.println("Venta no encontrada.");
+            return;
+        }
+
+        System.out.println("VENTA ENCONTRADA");
+        System.out.println("ID: " + v.getId());
+        System.out.println("Cliente ID: " + v.getCliente().getId());
+        System.out.println("Fecha: " + v.getFecha());
+        System.out.println("Total: " + v.getTotal());
+        System.out.println("----------------------------------");
+
+        String resp = validaciones.validarTexto("Escriba SI para confirmar eliminación:");
+
+        if (resp.equalsIgnoreCase("SI")) {
+            gestor.eliminar(id);
+        } else {
+            System.out.println("Operación cancelada.");
+        }
     }
+
 }

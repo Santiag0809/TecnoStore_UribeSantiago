@@ -149,4 +149,22 @@ public class GestionarClienteImpl implements clienteControlador {
         }
     }
 
+    @Override
+    public boolean tieneVentas(int idCliente) {
+        String sql = "SELECT 1 FROM venta WHERE id_cliente = ? LIMIT 1";
+
+        try (Connection con = c.conectar(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, idCliente);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error validando ventas del cliente: " + e.getMessage());
+            return true;
+        }
+    }
+
 }

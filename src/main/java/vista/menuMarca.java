@@ -39,7 +39,6 @@ public class menuMarca {
         } while (op != 5);
     }
 
-    
     private void registrar() {
         String nombre = validaciones.validarTexto("Ingrese el nombre de la marca:");
         marca m = new marca(0, nombre);
@@ -47,7 +46,6 @@ public class menuMarca {
         System.out.println("Marca registrada correctamente.");
     }
 
-    
     private void listar() {
         ArrayList<marca> marcas = gestorMarca.listar();
 
@@ -60,7 +58,6 @@ public class menuMarca {
         marcas.forEach(System.out::println);
     }
 
-    
     private void actualizar() {
         listar();
 
@@ -79,8 +76,8 @@ public class menuMarca {
         System.out.println("Marca actualizada correctamente.");
     }
 
-    
     private void eliminar() {
+
         listar();
 
         int id = validaciones.validacionEnteros("Ingrese el ID de la marca a eliminar:");
@@ -91,7 +88,18 @@ public class menuMarca {
             return;
         }
 
-        gestorMarca.eliminar(id);
-        System.out.println("Marca eliminada correctamente.");
+        System.out.println("MARCA ENCONTRADA");
+        System.out.println(m);
+        System.out.println("----------------------------------");
+
+        String resp = validaciones.validarTexto("Escriba SI para confirmar eliminación:");
+
+        if (resp.equalsIgnoreCase("SI")) {
+            gestorMarca.eliminar(id);
+            System.out.println("Marca eliminada correctamente.");
+        } else {
+            System.out.println("Operación cancelada.");
+        }
     }
+
 }

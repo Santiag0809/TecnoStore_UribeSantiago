@@ -168,8 +168,39 @@ public class menuCliente {
     }
 
     private void eliminar() {
+
         System.out.println("Ingrese el id del cliente a eliminar");
         int id = new Scanner(System.in).nextInt();
-        gestor.eliminar(id);
+
+        cliente cl = gestor.buscarPorId(id);
+
+        if (cl == null) {
+            System.out.println("No existe dicho cliente");
+            return;
+        }
+
+        if (gestor.tieneVentas(id)) {
+            System.out.println("No se puede eliminar: el cliente tiene ventas registradas.");
+            System.out.println("Debe eliminar primero la(s) venta(s) asociada(s).");
+            return;
+        }
+
+        System.out.println("CLIENTE ENCONTRADO");
+        System.out.println("ID: " + cl.getId());
+        System.out.println("Nombre: " + cl.getNombre());
+        System.out.println("Identificación: " + cl.getIdentificacion());
+        System.out.println("Correo: " + cl.getCorreo());
+        System.out.println("Teléfono: " + cl.getTelefono());
+        System.out.println("----------------------------------");
+
+        System.out.println("Escriba SI para confirmar eliminación:");
+        String resp = new Scanner(System.in).nextLine();
+
+        if (resp.equalsIgnoreCase("SI")) {
+            gestor.eliminar(id);
+        } else {
+            System.out.println("Operación cancelada.");
+        }
     }
+
 }
