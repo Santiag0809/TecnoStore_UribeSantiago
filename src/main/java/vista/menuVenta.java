@@ -1,11 +1,15 @@
 package vista;
 
-import controlador.GestionarCelularImpl;
-import controlador.GestionarClienteImpl;
 import controlador.GestionarVentaImpl;
+import controlador.ventaControlador;
+import controlador.GestionarClienteImpl;
+import controlador.clienteControlador;
+import controlador.GestionarCelularImpl;
+import controlador.celularControlador;
 import controlador.validaciones;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Scanner;
 import modelo.celular;
 import modelo.cliente;
 import modelo.detalleVenta;
@@ -13,53 +17,38 @@ import modelo.venta;
 
 public class menuVenta {
 
-    GestionarVentaImpl gestorVenta = new GestionarVentaImpl();
-    GestionarClienteImpl gestorCliente = new GestionarClienteImpl();
-    GestionarCelularImpl gestorCelular = new GestionarCelularImpl();
-    validaciones validaciones = new validaciones();
+    private ventaControlador gestor = new GestionarVentaImpl();
+    private clienteControlador gestorCliente = new GestionarClienteImpl();
+    private celularControlador gestorCelular = new GestionarCelularImpl();
 
-    public void menuVenta() {
+    public void menuVentana() {
 
-        int op = 0;
+        int op;
 
         do {
-            System.out.println("""
-                           ******************************
-                           1.   Registrar Venta.
-                           2.   Actualizar Venta.
-                           3.   Eliminar Venta.
-                           4.   Listar Ventas.
-                           5.   Buscar Venta por ID.
-                           6.   Salir.
-                           ******************************
-                           """);
-
-            op = validaciones.validacionEnteros("Seleccione una opción:");
-
-            while (op < 1 || op > 6) {
-                System.out.println("Error, opcion no valida");
-                op = validaciones.validacionEnteros("Seleccione una opción:");
-            }
+            op = validaciones.validacionEnteroSwitch("""
+                    ======= GESTIÓN VENTAS =======
+                    1. Registrar venta
+                    2. Actualizar venta
+                    3. Borrar venta
+                    4. Buscar venta por ID
+                    5. Listar ventas
+                    6. Salir
+                    """, 1, 6);
 
             switch (op) {
-                case 1:
+                case 1 ->
                     registrar();
-                    break;
-                case 2:
+                case 2 ->
                     actualizar();
-                    break;
-                case 3:
+                case 3 ->
                     eliminar();
-                    break;
-                case 4:
+                case 4 ->
+                    buscarPorId();
+                case 5 ->
                     listar();
-                    break;
-                case 5:
-                    buscar();
-                    break;
-                case 6:
-                    System.out.println("Saliendo...");
-                    break;
+                case 6 ->
+                    System.out.println("Saliendo al menu principaaaal");
             }
 
         } while (op != 6);
@@ -67,146 +56,204 @@ public class menuVenta {
 
     private void registrar() {
 
-        int idCliente = validaciones.validacionEnteros("Ingrese el ID del cliente:");
+        venta v = new venta();
+        ArrayList<detalleVenta> items = new ArrayList<>();
+
+        System.out.println("Ingrese el id del cliente");
+        int idCliente = new Scanner(System.in).nextInt();
+
         cliente cl = gestorCliente.buscarPorId(idCliente);
 
         if (cl == null) {
-            System.out.println("Cliente no encontrado.");
+            System.out.println("No existe dicho cliente");
             return;
         }
 
-        ArrayList<detalleVenta> items = new ArrayList<>();
+        v.setCliente(cl);
+        v.setFecha(LocalDate.now());
 
-        while (true) {
+        int op;
 
-            int idCel = validaciones.validacionEnteros("Ingrese el ID del celular (0 para no seguir agregando):");
-            if (idCel == 0) {
-                break;
+        do {
+            System.out.println("""
+                               ======= AGREGAR CELULAR A LA VENTA =======
+                               1. Agregar celular
+                               2. Terminar venta
+                               """);
+
+            op = new Scanner(System.in).nextInt();
+
+            while (op < 1 || op > 2) {
+                System.out.println("Error, opcion no valida");
+                op = new Scanner(System.in).nextInt();
             }
 
-            celular ce = gestorCelular.buscar(idCel);
+            if (op == 1) {
 
-            if (ce == null) {
-                System.out.println("Celular no encontrado.");
-                continue;
+                System.out.println("Ingrese el id del celular");
+                int idCel = new Scanner(System.in).nextInt();
+
+                celular ce = gestorCelular.buscar(idCel);
+
+                if (ce == null) {
+                    System.out.println("No existe dicho celular");
+                    continue;
+                }
+
+                System.out.println("Ingrese la cantidad");
+                int cantidad = new Scanner(System.in).nextInt();
+
+                if (cantidad <= 0) {
+                    System.out.println("Cantidad inválida");
+                    continue;
+                }
+
+                if (cantidad > ce.getStock()) {
+                    System.out.println("Stock insuficiente. Stock actual: " + ce.getStock());
+                    continue;
+                }
+
+                detalleVenta dv = new detalleVenta();
+                dv.setCelular(ce);
+                dv.setCantidad(cantidad);
+                dv.setSubtotal(ce.getPrecio() * cantidad);
+
+                items.add(dv);
+
+                System.out.println("Celular agregado a la venta!");
+
             }
 
-            int cant = validaciones.validacionEnteros("Cantidad:");
-
-            if (cant <= 0) {
-                System.out.println("Cantidad inválida.");
-                continue;
-            }
-
-            if (cant > ce.getStock()) {
-                System.out.println("Stock insuficiente. Stock actual: " + ce.getStock());
-                continue;
-            }
-
-            detalleVenta dv = new detalleVenta();
-            dv.setCelular(ce);
-            dv.setCantidad(cant);
-            dv.setSubtotal(ce.getPrecio() * cant);
-
-            items.add(dv);
-        }
+        } while (op != 2);
 
         if (items.isEmpty()) {
-            System.out.println("No se agregaron items a la venta.");
+            System.out.println("La venta debe tener al menos un item.");
             return;
         }
 
-        venta v = new venta(0, cl, LocalDate.now(), 0, items);
-        gestorVenta.registrar(v);
+        v.setItems(items);
+
+        gestor.registrar(v);
     }
 
     private void actualizar() {
 
-        int idVenta = validaciones.validacionEnteros("Ingrese el ID de la venta a actualizar:");
-        venta vExistente = gestorVenta.buscarPorId(idVenta);
+        System.out.println("Ingrese el id de la venta a actualizar");
+        int id = new Scanner(System.in).nextInt();
 
-        if (vExistente == null) {
-            System.out.println("Venta no encontrada.");
-            return;
-        }
-
-        int idCliente = validaciones.validacionEnteros("Ingrese el ID del nuevo cliente:");
-        cliente cl = gestorCliente.buscarPorId(idCliente);
-
-        if (cl == null) {
-            System.out.println("Cliente no encontrado.");
-            return;
-        }
-
-        ArrayList<detalleVenta> items = new ArrayList<>();
-
-        while (true) {
-
-            int idCel = validaciones.validacionEnteros("Ingrese el ID del celular (0 para terminar):");
-            if (idCel == 0) {
-                break;
-            }
-
-            celular ce = gestorCelular.buscar(idCel);
-
-            if (ce == null) {
-                System.out.println("Celular no encontrado.");
-                continue;
-            }
-
-            int cant = validaciones.validacionEnteros("Cantidad:");
-
-            if (cant <= 0) {
-                System.out.println("Cantidad inválida.");
-                continue;
-            }
-
-            detalleVenta dv = new detalleVenta();
-            dv.setCelular(ce);
-            dv.setCantidad(cant);
-            dv.setSubtotal(ce.getPrecio() * cant);
-
-            items.add(dv);
-        }
-
-        if (items.isEmpty()) {
-            System.out.println("No se agregaron items.");
-            return;
-        }
-
-        venta v = new venta(idVenta, cl, LocalDate.now(), 0, items);
-        gestorVenta.actualizar(v, idVenta);
-    }
-
-    private void eliminar() {
-
-        int idVenta = validaciones.validacionEnteros("Ingrese el ID de la venta a eliminar:");
-        venta v = gestorVenta.buscarPorId(idVenta);
+        venta v = gestor.buscarPorId(id);
 
         if (v == null) {
-            System.out.println("Venta no encontrada.");
+            System.out.println("No existe dicho venta");
             return;
         }
 
-        System.out.println("Seguro que desea eliminar esta venta?");
+        System.out.println("VENTA ENCONTRADA");
         System.out.println("ID: " + v.getId());
-        System.out.println("Cliente: " + v.getCliente().getNombre());
+        System.out.println("Cliente ID: " + v.getCliente().getId());
         System.out.println("Fecha: " + v.getFecha());
         System.out.println("Total: " + v.getTotal());
         System.out.println("----------------------------------");
 
-        String resp = validaciones.validarTexto("Escriba SI para confirmar:");
+        System.out.println("""
+                           Ingrese lo quiere modificar
+                           1.   Cliente
+                           2.   Items
+                           """);
 
-        if (resp.equalsIgnoreCase("SI")) {
-            gestorVenta.eliminar(idVenta);
-        } else {
-            System.out.println("Operación cancelada.");
+        int op = new Scanner(System.in).nextInt();
+        while (op < 1 || op > 2) {
+            System.out.println("Error, opcion no valida");
+            op = new Scanner(System.in).nextInt();
         }
+
+        switch (op) {
+            case 1 -> {
+                System.out.println("Ingrese el nuevo id del cliente");
+                int idCliente = new Scanner(System.in).nextInt();
+
+                cliente cl = gestorCliente.buscarPorId(idCliente);
+
+                if (cl == null) {
+                    System.out.println("No existe dicho cliente");
+                    return;
+                }
+
+                v.setCliente(cl);
+                v.setFecha(LocalDate.now());
+                break;
+            }
+
+            case 2 -> {
+
+                ArrayList<detalleVenta> items = new ArrayList<>();
+
+                int op2;
+
+                do {
+                    System.out.println("""
+                               ======= AGREGAR CELULAR A LA VENTA =======
+                               1. Agregar celular
+                               2. Terminar edición
+                               """);
+
+                    op2 = new Scanner(System.in).nextInt();
+
+                    while (op2 < 1 || op2 > 2) {
+                        System.out.println("Error, opcion no valida");
+                        op2 = new Scanner(System.in).nextInt();
+                    }
+
+                    if (op2 == 1) {
+
+                        System.out.println("Ingrese el id del celular");
+                        int idCel = new Scanner(System.in).nextInt();
+
+                        celular ce = gestorCelular.buscar(idCel);
+
+                        if (ce == null) {
+                            System.out.println("No existe dicho celular");
+                            continue;
+                        }
+
+                        System.out.println("Ingrese la cantidad");
+                        int cantidad = new Scanner(System.in).nextInt();
+
+                        if (cantidad <= 0) {
+                            System.out.println("Cantidad inválida");
+                            continue;
+                        }
+
+                        detalleVenta dv = new detalleVenta();
+                        dv.setCelular(ce);
+                        dv.setCantidad(cantidad);
+                        dv.setSubtotal(ce.getPrecio() * cantidad);
+
+                        items.add(dv);
+
+                        System.out.println("Celular agregado!");
+
+                    }
+
+                } while (op2 != 2);
+
+                if (items.isEmpty()) {
+                    System.out.println("La venta debe tener al menos un item.");
+                    return;
+                }
+
+                v.setItems(items);
+                v.setFecha(LocalDate.now());
+                break;
+            }
+        }
+
+        gestor.actualizar(v, id);
     }
 
     private void listar() {
 
-        ArrayList<venta> ventas = gestorVenta.listar();
+        ArrayList<venta> ventas = gestor.listar();
 
         if (ventas.isEmpty()) {
             System.out.println("No hay ventas registradas.");
@@ -215,34 +262,50 @@ public class menuVenta {
 
         for (venta v : ventas) {
             System.out.println("ID: " + v.getId());
-            System.out.println("Cliente: " + v.getCliente().getNombre());
+            System.out.println("Cliente ID: " + v.getCliente().getId());
             System.out.println("Fecha: " + v.getFecha());
             System.out.println("Total: " + v.getTotal());
             System.out.println("----------------------------------");
         }
     }
 
-    private void buscar() {
+    private void buscarPorId() {
 
-        int idVenta = validaciones.validacionEnteros("Ingrese el ID de la venta:");
-        venta v = gestorVenta.buscarPorId(idVenta);
+        System.out.println("Ingrese el id de la venta a buscar");
+        int id = new Scanner(System.in).nextInt();
 
-        if (v == null) {
-            System.out.println("Venta no encontrada.");
-            return;
-        }
+        venta v = gestor.buscarPorId(id);
 
-        System.out.println("ID: " + v.getId());
-        System.out.println("Cliente: " + v.getCliente().getNombre());
-        System.out.println("Fecha: " + v.getFecha());
-        System.out.println("Total: " + v.getTotal());
-        System.out.println("Items:");
+        if (v != null) {
 
-        for (detalleVenta dv : v.getItems()) {
-            System.out.println("Celular: " + dv.getCelular().getModelo());
-            System.out.println("Cantidad: " + dv.getCantidad());
-            System.out.println("Subtotal: " + dv.getSubtotal());
+            System.out.println("ID: " + v.getId());
+            System.out.println("Cliente ID: " + v.getCliente().getId());
+            System.out.println("Fecha: " + v.getFecha());
+            System.out.println("Total: " + v.getTotal());
             System.out.println("----------------------------------");
+
+            if (v.getItems() != null && !v.getItems().isEmpty()) {
+
+                System.out.println("======= ITEMS =======");
+
+                for (detalleVenta dv : v.getItems()) {
+
+                    System.out.println("Celular ID: " + dv.getCelular().getId());
+                    System.out.println("Cantidad: " + dv.getCantidad());
+                    System.out.println("Subtotal: " + dv.getSubtotal());
+                    System.out.println("----------------------------------");
+                }
+            }
+
+        } else {
+            System.out.println("No existe ese id");
         }
+    }
+
+    private void eliminar() {
+
+        System.out.println("Ingrese el id de la venta a eliminar");
+        int id = new Scanner(System.in).nextInt();
+        gestor.eliminar(id);
     }
 }

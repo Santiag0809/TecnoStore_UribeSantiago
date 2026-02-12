@@ -18,14 +18,15 @@ public class menu {
                        2.   Gestionar Celulares.
                        3.   Gestionar Marcas.
                        4.   Gestionar Ventas.
-                       5.   Salir.
+                       5.   Generar reporte.
+                       6.   Salir.
                        ******************************
                        """);
 
             try {
                 op = Integer.parseInt(sc.nextLine());
 
-                while (op < 1 || op > 5) {
+                while (op < 1 || op > 6) {
                     System.out.println("Error, opción no válida");
                     op = Integer.parseInt(sc.nextLine());
                 }
@@ -39,10 +40,11 @@ public class menu {
                 case 1 -> menuCliente.menuCliente();
                 case 2 -> menuCelular.menuCel();
                 case 3 -> menuMarca.menuMarcos();
-                case 4 -> menuVenta.menuVenta();
-                case 5 -> System.out.println("Gracias por usar el sistema adioooos");
+                case 4 -> menuVenta.menuVentana();
+                case 5 -> System.out.println("reportes.txt");
+                case 6 -> System.out.println("Gracias por usar el sistema adioooos");
             }
 
-        } while (op != 5);
+        } while (op != 6);
     }
 }

@@ -8,10 +8,8 @@ public class detalleVenta {
     private int cantidad;
     private double subtotal;
 
-    public detalleVenta() {
-    }
-
-    public detalleVenta(int id_venta, celular celular, int cantidad, double subtotal) {
+    public detalleVenta(int id, int id_venta, celular celular, int cantidad, double subtotal) {
+        this.id = id;
         this.id_venta = id_venta;
         this.celular = celular;
         this.cantidad = cantidad;
@@ -57,4 +55,12 @@ public class detalleVenta {
     public void setSubtotal(double subtotal) {
         this.subtotal = subtotal;
     }
+
+    public detalleVenta() {
+    }
+
+    
+
+    
+    
 }
