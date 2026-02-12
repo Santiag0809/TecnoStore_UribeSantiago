@@ -261,10 +261,26 @@ public class menuVenta {
         }
 
         for (venta v : ventas) {
+
+            venta completa = gestor.buscarPorId(v.getId());
+
+            double subtotal = 0;
+            if (completa != null && completa.getItems() != null) {
+                for (detalleVenta dv : completa.getItems()) {
+                    subtotal += dv.getSubtotal();
+                }
+            }
+
+            double iva = subtotal * 0.19;
+            double total = subtotal + iva;
+
             System.out.println("ID: " + v.getId());
+            System.out.println("Cliente: " + v.getCliente().getNombre());
             System.out.println("Cliente ID: " + v.getCliente().getId());
             System.out.println("Fecha: " + v.getFecha());
-            System.out.println("Total: " + v.getTotal());
+            System.out.printf("Subtotal: $%,.2f%n", subtotal);
+            System.out.printf("IVA (19%%): $%,.2f%n", iva);
+            System.out.printf("Total: $%,.2f%n", total);
             System.out.println("----------------------------------");
         }
     }

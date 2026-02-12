@@ -28,11 +28,11 @@ public class GestionarVentaImpl implements ventaControlador {
         }
 
         double subtotal = 0;
-        for (detalleVenta dV : v.getItems()) {
-            if (dV.getSubtotal() <= 0 && dV.getCelular() != null) {
-                dV.setSubtotal(dV.getCelular().getPrecio() * dV.getCantidad());
+        for (detalleVenta it : v.getItems()) {
+            if (it.getSubtotal() <= 0 && it.getCelular() != null) {
+                it.setSubtotal(it.getCelular().getPrecio() * it.getCantidad());
             }
-            subtotal += dV.getSubtotal();
+            subtotal += it.getSubtotal();
         }
         double total = subtotal + (subtotal * 0.19);
         v.setTotal(total);
@@ -48,7 +48,6 @@ public class GestionarVentaImpl implements ventaControlador {
             int idVenta = 0;
 
             try (Statement st = con.createStatement()) {
-
                 ResultSet rs = st.executeQuery("SELECT MAX(id) AS id FROM venta");
                 if (rs.next()) {
                     idVenta = rs.getInt("id");
@@ -69,7 +68,6 @@ public class GestionarVentaImpl implements ventaControlador {
                 String sqlStock = "UPDATE celular SET stock = stock - ? WHERE id = ? AND stock >= ?";
 
                 try (PreparedStatement ps2 = con.prepareStatement(sqlStock)) {
-
                     ps2.setInt(1, cant);
                     ps2.setInt(2, idCel);
                     ps2.setInt(3, cant);
@@ -84,12 +82,10 @@ public class GestionarVentaImpl implements ventaControlador {
                 String sqlDetalle = "INSERT INTO detalle_venta(id_venta, id_celular, cantidad, subtotal) VALUES (?,?,?,?)";
 
                 try (PreparedStatement ps2 = con.prepareStatement(sqlDetalle)) {
-
                     ps2.setInt(1, idVenta);
                     ps2.setInt(2, idCel);
                     ps2.setInt(3, cant);
                     ps2.setDouble(4, it.getSubtotal());
-
                     ps2.executeUpdate();
                 }
             }
@@ -115,32 +111,29 @@ public class GestionarVentaImpl implements ventaControlador {
 
             String sqlOld = "SELECT id_celular, cantidad FROM detalle_venta WHERE id_venta=?";
 
-            try (PreparedStatement ps = con.prepareStatement(sqlOld)) {
+            PreparedStatement ps = con.prepareStatement(sqlOld);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
 
-                ps.setInt(1, id);
+            while (rs.next()) {
 
-                try (ResultSet rs = ps.executeQuery()) {
-                    while (rs.next()) {
+                int idCel = rs.getInt("id_celular");
+                int cant = rs.getInt("cantidad");
 
-                        int idCel = rs.getInt("id_celular");
-                        int cant = rs.getInt("cantidad");
+                String sqlRestore = "UPDATE celular SET stock = stock + ? WHERE id=?";
 
-                        String sqlStock = "UPDATE celular SET stock = stock + ? WHERE id=?";
-
-                        try (PreparedStatement ps2 = con.prepareStatement(sqlStock)) {
-                            ps2.setInt(1, cant);
-                            ps2.setInt(2, idCel);
-                            ps2.executeUpdate();
-                        }
-                    }
+                try (PreparedStatement ps2 = con.prepareStatement(sqlRestore)) {
+                    ps2.setInt(1, cant);
+                    ps2.setInt(2, idCel);
+                    ps2.executeUpdate();
                 }
             }
 
             String sqlDelete = "DELETE FROM detalle_venta WHERE id_venta=?";
 
-            try (PreparedStatement ps = con.prepareStatement(sqlDelete)) {
-                ps.setInt(1, id);
-                ps.executeUpdate();
+            try (PreparedStatement ps2 = con.prepareStatement(sqlDelete)) {
+                ps2.setInt(1, id);
+                ps2.executeUpdate();
             }
 
             double subtotal = 0;
@@ -153,14 +146,14 @@ public class GestionarVentaImpl implements ventaControlador {
             double total = subtotal + (subtotal * 0.19);
             v.setTotal(total);
 
-            try (PreparedStatement ps = con.prepareStatement(sql)) {
+            try (PreparedStatement ps2 = con.prepareStatement(sql)) {
 
-                ps.setInt(1, v.getCliente().getId());
-                ps.setDate(2, Date.valueOf(v.getFecha() != null ? v.getFecha() : LocalDate.now()));
-                ps.setDouble(3, v.getTotal());
-                ps.setInt(4, id);
+                ps2.setInt(1, v.getCliente().getId());
+                ps2.setDate(2, Date.valueOf(v.getFecha() != null ? v.getFecha() : LocalDate.now()));
+                ps2.setDouble(3, v.getTotal());
+                ps2.setInt(4, id);
 
-                int rows = ps.executeUpdate();
+                int rows = ps2.executeUpdate();
                 if (rows > 0) {
                     System.out.println("ACTUALIZACION EXITOSA!");
                 } else {
@@ -174,15 +167,14 @@ public class GestionarVentaImpl implements ventaControlador {
                 int idCel = it.getCelular().getId();
                 int cant = it.getCantidad();
 
-                String sqlStockNew = "UPDATE celular SET stock = stock - ? WHERE id = ? AND stock >= ?";
+                String sqlStock = "UPDATE celular SET stock = stock - ? WHERE id = ? AND stock >= ?";
 
-                try (PreparedStatement ps = con.prepareStatement(sqlStockNew)) {
+                try (PreparedStatement ps2 = con.prepareStatement(sqlStock)) {
+                    ps2.setInt(1, cant);
+                    ps2.setInt(2, idCel);
+                    ps2.setInt(3, cant);
 
-                    ps.setInt(1, cant);
-                    ps.setInt(2, idCel);
-                    ps.setInt(3, cant);
-
-                    int rows = ps.executeUpdate();
+                    int rows = ps2.executeUpdate();
                     if (rows == 0) {
                         System.out.println("Stock insuficiente para el celular id=" + idCel);
                         return;
@@ -191,14 +183,12 @@ public class GestionarVentaImpl implements ventaControlador {
 
                 String sqlDetalle = "INSERT INTO detalle_venta(id_venta, id_celular, cantidad, subtotal) VALUES (?,?,?,?)";
 
-                try (PreparedStatement ps = con.prepareStatement(sqlDetalle)) {
-
-                    ps.setInt(1, id);
-                    ps.setInt(2, idCel);
-                    ps.setInt(3, cant);
-                    ps.setDouble(4, it.getSubtotal());
-
-                    ps.executeUpdate();
+                try (PreparedStatement ps2 = con.prepareStatement(sqlDetalle)) {
+                    ps2.setInt(1, id);
+                    ps2.setInt(2, idCel);
+                    ps2.setInt(3, cant);
+                    ps2.setDouble(4, it.getSubtotal());
+                    ps2.executeUpdate();
                 }
             }
 
@@ -212,15 +202,27 @@ public class GestionarVentaImpl implements ventaControlador {
 
         ArrayList<venta> ventas = new ArrayList<>();
 
-        try (Connection con = c.conectar()) {
+        String sql = """
+    SELECT v.id,
+           v.id_cliente,
+           c.nombre,
+           v.fecha,
+           IFNULL(SUM(dv.subtotal), 0) AS subtotal,
+           v.total
+    FROM venta v
+    JOIN cliente c ON c.id = v.id_cliente
+    LEFT JOIN detalle_venta dv ON dv.id_venta = v.id
+    GROUP BY v.id, v.id_cliente, c.nombre, v.fecha, v.total
+    ORDER BY v.id
+    """;
 
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("select * from venta");
+        try (Connection con = c.conectar(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
 
                 cliente cl = new cliente();
                 cl.setId(rs.getInt("id_cliente"));
+                cl.setNombre(rs.getString("nombre"));
 
                 venta v = new venta(
                         rs.getInt("id"),
@@ -233,8 +235,8 @@ public class GestionarVentaImpl implements ventaControlador {
                 ventas.add(v);
             }
 
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        } catch (SQLException e) {
+            System.out.println("Error listando ventas: " + e.getMessage());
         }
 
         return ventas;
@@ -308,38 +310,35 @@ public class GestionarVentaImpl implements ventaControlador {
 
             String sqlOld = "SELECT id_celular, cantidad FROM detalle_venta WHERE id_venta=?";
 
-            try (PreparedStatement ps = con.prepareStatement(sqlOld)) {
+            PreparedStatement ps = con.prepareStatement(sqlOld);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
 
-                ps.setInt(1, id);
+            while (rs.next()) {
 
-                try (ResultSet rs = ps.executeQuery()) {
-                    while (rs.next()) {
+                int idCel = rs.getInt("id_celular");
+                int cant = rs.getInt("cantidad");
 
-                        int idCel = rs.getInt("id_celular");
-                        int cant = rs.getInt("cantidad");
+                String sqlRestore = "UPDATE celular SET stock = stock + ? WHERE id=?";
 
-                        String sqlStock = "UPDATE celular SET stock = stock + ? WHERE id=?";
-
-                        try (PreparedStatement ps2 = con.prepareStatement(sqlStock)) {
-                            ps2.setInt(1, cant);
-                            ps2.setInt(2, idCel);
-                            ps2.executeUpdate();
-                        }
-                    }
+                try (PreparedStatement ps2 = con.prepareStatement(sqlRestore)) {
+                    ps2.setInt(1, cant);
+                    ps2.setInt(2, idCel);
+                    ps2.executeUpdate();
                 }
             }
 
             String sqlDelete = "DELETE FROM detalle_venta WHERE id_venta=?";
 
-            try (PreparedStatement ps = con.prepareStatement(sqlDelete)) {
-                ps.setInt(1, id);
-                ps.executeUpdate();
+            try (PreparedStatement ps2 = con.prepareStatement(sqlDelete)) {
+                ps2.setInt(1, id);
+                ps2.executeUpdate();
             }
 
-            try (PreparedStatement ps = con.prepareStatement(sql)) {
+            try (PreparedStatement ps2 = con.prepareStatement(sql)) {
 
-                ps.setInt(1, id);
-                int rows = ps.executeUpdate();
+                ps2.setInt(1, id);
+                int rows = ps2.executeUpdate();
 
                 if (rows > 0) {
                     System.out.println("ELIMINACION EXITOSA!");
@@ -352,5 +351,4 @@ public class GestionarVentaImpl implements ventaControlador {
             System.out.println("Error eliminando venta: " + e.getMessage());
         }
     }
-
 }
